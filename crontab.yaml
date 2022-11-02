@@ -1,0 +1,21 @@
+jobs:
+  - name: ic-sync
+    command: |
+      cd data-pipelines
+      python s3_postgres_categorised_etl.py || ./slack-report.sh "s3_postgres_categorised_etl.py failed"
+    schedule: "30 0 * * *"
+    captureStderr: true
+
+  - name: appbackup
+    command: |
+      cd data-pipelines
+      python market_data_postgres.py || ./slack-report.sh "market_data_postgres.py failed"
+    schedule: "30 0 * * *"
+    captureStderr: true
+
+  # - name: dwh-etl-gobroker
+  #   command: |
+  #     cd /work/syncer
+  #     ./dwh/etl-main-hack.sh || ./slack-report.sh "DWH ETL GOBROKER failed"
+  #   schedule: "45 1 * * *"
+  #   captureStderr: true
